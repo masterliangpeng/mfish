@@ -1,0 +1,35 @@
+
+QWeb:AvoidCommentedOutCodeCheck°"Remove this commented out code.(ÕË°ó8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheck³"%Add an "alt" attribute to this image.(’ÑÀßûÿÿÿÿ8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheckµ"%Add an "alt" attribute to this image.(š’Íİÿÿÿÿÿ8¥ÙÕÈØ2
+OWeb:ImgWithoutAltCheck¶"%Add an "alt" attribute to this image.(˜ñ²ò8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheck·"%Add an "alt" attribute to this image.(ŸÔíøÿÿÿÿ8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheck¸"%Add an "alt" attribute to this image.(ù»üñşÿÿÿÿ8¥ÙÕÈØ2
+OWeb:ImgWithoutAltCheck¹"%Add an "alt" attribute to this image.(ú¼Öò8¥ÙÕÈØ2
+OWeb:ImgWithoutAltCheckº"%Add an "alt" attribute to this image.(çá •8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheck»"%Add an "alt" attribute to this image.(¡·ìŞøÿÿÿÿ8¥ÙÕÈØ2
+TWeb:ImgWithoutAltCheck¼"%Add an "alt" attribute to this image.(ŞÅ¾”ıÿÿÿÿ8¥ÙÕÈØ2
+VWeb:AvoidCommentedOutCodeCheckÅ"Remove this commented out code.(¢Ëşıÿÿÿÿ8¥ÙÕÈØ2
+QWeb:AvoidCommentedOutCodeCheckÆ"Remove this commented out code.(ıı²ø8¦ÙÕÈØ2
+†javascript:S2392‘"]Consider moving declaration of 'dataMap' as it is referenced outside current binding context.(ë¢³”øÿÿÿÿ8ñÛÕÈØ2
+‚javascript:S2392–"YConsider moving declaration of 'key' as it is referenced outside current binding context.(±ì­½úÿÿÿÿ8òÛÕÈØ2
+Cjavascript:S2814œ"'data' is already defined.(åöÖ¾şÿÿÿÿ8òÛÕÈØ2
+ƒjavascript:S2392œ"ZConsider moving declaration of 'data' as it is referenced outside current binding context.(åöÖ¾şÿÿÿÿ8òÛÕÈØ2
+Bjavascript:S2814¡"'key' is already defined.(±ì­½úÿÿÿÿ8òÛÕÈØ2
+Fjavascript:S2814¢"'dataMap' is already defined.(Ï¿İÒÿÿÿÿÿ8óÛÕÈØ2
+Cjavascript:S2814£"'data' is already defined.(åöÖ¾şÿÿÿÿ8óÛÕÈØ2
+}javascript:S3776´"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(±ùÇˆÿÿÿÿÿ8óÛÕÈØ2
+ˆjavascript:S2392¿"_Consider moving declaration of 'h1Element' as it is referenced outside current binding context.(€†™Ëşÿÿÿÿ8óÛÕÈØ2
+ˆjavascript:S2392Â"_Consider moving declaration of 'h4Element' as it is referenced outside current binding context.(ˆıñ¿ıÿÿÿÿ8ôÛÕÈØ2
+…javascript:S2392Å"aConsider moving declaration of 'tooltiptext' as it is referenced outside current binding context.(­Õñ8ôÛÕÈØ2
+pjavascript:S4138Æ"LExpected a `for-of` loop instead of a `for` loop with this simple iteration.(¡¥œ¼8ôÛÕÈØ2
+Hjavascript:S2814Ó"'h1Element' is already defined.(€†™Ëşÿÿÿÿ8õÛÕÈØ2
+Hjavascript:S2814Ö"'h4Element' is already defined.(ˆıñ¿ıÿÿÿÿ8õÛÕÈØ2
+Ejavascript:S2814Ù"!'tooltiptext' is already defined.(­Õñ8õÛÕÈØ2
+pjavascript:S4138Ú"LExpected a `for-of` loop instead of a `for` loop with this simple iteration.(¡¥œ¼8õÛÕÈØ2
+cjavascript:S6660ü"?'If' statement should not be the only statement in 'else' block(Ÿ†Ÿ±8õÛÕÈØ2
+>javascript:S108§"Empty block statement.(‹„ãÙşÿÿÿÿ8õÛÕÈØ2
+9javascript:S108©"Empty block statement.(õ­¯ù8öÛÕÈØ2
+8javascript:S108«"Empty block statement.(ŸéÏ8öÛÕÈØ2
+9javascript:S108­"Empty block statement.(°Øù«8öÛÕÈØ2
+>javascript:S108¯"Empty block statement.(¡…¥Ôúÿÿÿÿ8÷ÛÕÈØ2

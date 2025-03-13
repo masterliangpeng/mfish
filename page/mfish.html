@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子木鱼</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: KaiTi, sans-serif;
+        }
+
+        .container {
+            background-color: #000000;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px; /* 设置所有四个边的圆角 */
+            transition: background-color 0.5s ease; /* 添加过渡动画 */
+        }
+
+        .topText{
+            text-align: center;
+            margin-top: 60px; /* 根据需要调整数值，向下移动 */
+            color: #fff;
+        }
+
+        .topText h1 {
+            font-size: 150%;
+        }
+
+        .topText h4{
+            font-size: 100%;
+        }
+
+        .settings-icon,
+        .settings-icon1,
+        .settings-icon2{
+            width: 30px; /* 设置图标宽度 */
+            height: 30px; /* 设置图标高度 */
+            background-repeat: no-repeat;
+            cursor: pointer;
+            position: fixed;
+            right: 30%;
+        }
+
+        .settings-icon {
+            top: 20%;
+            background-image: url('../img/白天模式(白).png');
+            background-size: 100%; /* 根据需要调整背景图像大小 */
+        }
+
+        .settings-icon1 {
+            top: 30%;
+            background-image: url('../img/统计(白).png');
+            background-size: 100%; /* 根据需要调整背景图像大小 */
+        }
+
+        .settings-icon2 {
+            top: 40%;
+            background-image: url('../img/设置(白).png');
+            background-size: 100%; /* 根据需要调整背景图像大小 */
+        }
+
+        .settings-icon:active,
+        .settings-icon1:active,
+        .settings-icon2:active {
+            transform: scale(0.9);
+        }
+
+        img {
+            position: fixed;
+            right: 40%;
+            top: 40%;
+            width: 20%;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.1s ease, filter 0.3s ease;
+            filter: grayscale(100%) brightness(100%);
+        }
+
+        img:active {
+            transform: scale(0.95);
+        }
+
+        .tooltip {
+            position: fixed;
+            right: 45%;
+            top: 35%;
+            color: #fff;
+            font-size: 20px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 1;
+            animation: floatUp 1s ease forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+        }
+
+        #edit{
+            /*text-align: center;*/
+            display: none;
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 80%;
+            height: 80%;
+            background-color: #fff;
+        }
+
+        @keyframes openEdit {
+            from {
+                transform: scale(0); /* 从 0 缩放 */
+                opacity: 0; /* 从透明到不透明 */
+            }
+            to {
+                transform: scale(1); /* 到 1 缩放 */
+                opacity: 1; /* 到不透明 */
+            }
+        }
+
+        @keyframes closeEdit {
+            from {
+                transform: scale(1); /* 从 1 缩放 */
+                opacity: 1; /* 从不透明到透明 */
+            }
+            to {
+                transform: scale(0); /* 到 0 缩放 */
+                opacity: 0; /* 到透明 */
+            }
+        }
+
+        /*关闭按钮*/
+        .close {
+            color: #000000;
+            float: right;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(255,0,0,0);
+        }
+
+
+        /*关闭按钮的鼠标点击和经过样式*/
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(255,0,0,0);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="topText">
+        <h1>轻轻敲击，可体验敲木鱼的解压</h1>
+        <h4>敲击次数：<span id="clickCount">0</span></h4>
+    </div>
+
+    <div>
+        <div class="settings-icon" value='0' onclick="clickEven(this)"></div>
+        <div class="settings-icon1" value='1' onclick="clickEven(this)"></div>
+        <div class="settings-icon2" value='2' onclick="clickEven(this)"></div>
+    </div>
+
+    <img src="../img/muyv.webp" alt="木鱼图片" onclick="playSound();showTooltip(event)">
+
+    <div id="edit">
+        <span class="close" onclick="closeEdit()">&times;</span>
+        <h3>背景图片</h3>
+        <div>
+            <img src="https://i2.wp.com/api-storage.4ce.cn/v1/f0425aa77776d2ddca3f3d696fd60b25.webp">
+        </div>
+        <hr/>
+        <h3>特效开关</h3>
+        <div></div>
+        <hr/>
+        <h3>黑白模式</h3>
+        <div></div>
+        <hr/>
+        <h3>自动模式</h3>
+        <div></div>
+        <hr/>
+    </div>
+</div>
+
+<audio id="muyuSound" src="../video/1.mp3"></audio>
+<script src="https://api.vvhan.com/api/script/bolang"></script>
+<!--<script src="https://api.vvhan.com/api/script/snow"></script>-->
+<script>
+
+    //黑夜模式
+    let isNight = true;
+    //监听全局空格事件
+    document.onkeydown=function (e){
+        let code = window.event ? e.keyCode : e.which;
+        if(code == 32){
+            showTooltip();
+            playSound();
+        }
+    }
+
+    function playSound() {
+        let sound = document.getElementById("muyuSound");
+        sound.play();
+    }
+
+    function showTooltip(event) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.innerText = '敲击木鱼!';
+        document.body.appendChild(tooltip);
+
+        if(isNight){
+            tooltip.style.color = '#fff';
+        }else{
+            tooltip.style.color = '#000';
+        }
+
+        let countElement = document.getElementById('clickCount');
+        // 获取当前值并加 1
+        let currentValue = parseInt(countElement.textContent, 10);
+        countElement.textContent = currentValue + 1; // 更新文本值
+
+        // const x = event.clientX;
+        // const y = event.clientY;
+        // tooltip.style.left = `47%`;
+        // tooltip.style.top = `55%`;
+
+        setTimeout(() => {
+            tooltip.style.opacity = '0';
+            setTimeout(() => {
+                tooltip.remove();
+            }, 200);
+        }, 200);
+    }
+
+    /**
+     * 功能点击事件
+     * @param element
+     */
+    function clickEven(element){
+        let type = element.getAttribute('value');
+        if('0' == type){
+            let container = document.getElementsByClassName('container')[0];
+            //白天模式
+            if(isNight){
+                container.style.backgroundColor = '#ffffff';
+                document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(黑).png')";
+                document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(黑).png')";
+                document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/设置(黑).png')";
+                document.getElementsByTagName('img')[0].style.filter = "brightness(0%)";
+                let h1Element = document.querySelector('.topText h1');
+                h1Element.style.color = '#000'; // 改变字体颜色为红色
+
+                let h4Element = document.querySelector('.topText h4');
+                h4Element.style.color = '#000'; // 改变字体颜色为红色
+                isNight = false;
+            }else{
+                container.style.backgroundColor = '#000';
+                document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(白).png')";
+                document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(白).png')";
+                document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/设置(白).png')";
+                document.getElementsByTagName('img')[0].style.filter = "brightness(100%)";
+
+                let h1Element = document.querySelector('.topText h1');
+                h1Element.style.color = '#fff'; // 改变字体颜色为红色
+
+                let h4Element = document.querySelector('.topText h4');
+                h4Element.style.color = '#fff'; // 改变字体颜色为红色
+                isNight = true;
+            }
+        }else if('1' == type){
+
+        }else{
+            let element = document.getElementById("edit");
+            element.style.display = "block";
+            //加打开特效
+            element.style.animation = 'openEdit 0.4s forwards';
+        }
+    }
+
+    /**
+     * 关闭弹窗事件
+     */
+    function closeEdit() {
+        let element = document.getElementById("edit");
+        //加关闭特效
+        element.style.animation = 'closeEdit 0.5s forwards';
+        // 等待动画结束后再隐藏弹窗
+        setTimeout(() => {
+            element.style.display = "none";
+        }, 300); // 动画持续时间
+    }
+</script>
+
+</body>
+</html>

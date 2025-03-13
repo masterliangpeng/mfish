@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电子木鱼</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      font-family: KaiTi, sans-serif;
+    }
+
+    .container {
+      background-color: #000000;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px; /* 自动模式所有四个边的圆角 */
+      transition: background-color 0.5s ease; /* 添加过渡动画 */
+    }
+
+    .topText {
+      text-align: center;
+      margin-top: 60px; /* 根据需要调整数值，向下移动 */
+      color: #fff;
+    }
+
+    .topText h1 {
+      font-size: 150%;
+    }
+
+    .topText h4 {
+      font-size: 100%;
+    }
+
+    .settings-icon,
+    .settings-icon1,
+    .settings-icon2 {
+      width: 30px; /* 自动模式图标宽度 */
+      height: 30px; /* 自动模式图标高度 */
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: fixed;
+      right: 30%;
+    }
+
+    .settings-icon {
+      top: 20%;
+      background-image: url('../img/白天模式(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon1 {
+      top: 30%;
+      background-image: url('../img/统计(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon2 {
+      top: 40%;
+      background-image: url('../img/自动模式(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon:active,
+    .settings-icon1:active,
+    .settings-icon2:active {
+      transform: scale(0.9);
+    }
+
+    .settings-icon:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    .settings-icon1:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    .settings-icon2:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      font-family: KaiTi, sans-serif;
+      z-index: 1;
+    }
+
+    .muImage {
+      position: fixed;
+      right: 40%;
+      top: 40%;
+      width: 20%;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.3s ease;
+      filter: grayscale(100%) brightness(100%);
+    }
+
+    img:active {
+      transform: scale(0.95);
+    }
+
+    .tooltip {
+      position: fixed;
+      right: 47%;
+      top: 30%;
+      color: #fff;
+      font-size: 30px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      pointer-events: none;
+      opacity: 1;
+      animation: floatUp 1.8s ease forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150px);
+        opacity: 0;
+      }
+    }
+
+    /* 弹窗初始样式 */
+    #sidePanel {
+      position: fixed;
+      top: 0;
+      /*right: -100%; !* 初始隐藏在屏幕右侧 *!*/
+      width: 30%;
+      height: 100%;
+      background-color: #f4f4f4;
+      box-shadow: -3px 0 5px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      transition: right 0.5s ease; /* 动画效果 */
+      border-radius: 20px;
+      z-index: 2;
+    }
+
+    #sidePanel p {
+      margin: auto;
+      line-height: 50px;
+      width: 50%;
+    }
+
+    #sidePanel.hidden {
+      right: -100%; /* 隐藏状态 */
+    }
+
+    #sidePanel.visible {
+      right: 0; /* 显示状态 */
+    }
+
+    .menu {
+      position: fixed;
+      right: -120px;
+      top: 40px;
+      width: 200px;
+    }
+
+    .center {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      background-color: rgb(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #000000;
+      font-size: 24px;
+      z-index: 1;
+    }
+
+    .center:hover {
+      background-color: rgb(255, 255, 255, 0.9) !important;
+    }
+
+    .icon {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .menu-items {
+      position: absolute;
+      top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-items.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu-items.show .icon {
+      pointer-events: auto;
+      opacity: 0;
+      transform: translateY(-30px);
+      animation: slideDown 0.5s ease-in-out forwards;
+    }
+
+    .menu-items.show .icon1 {
+      animation-delay: 0s;
+    }
+
+    .menu-items.show .icon2 {
+      animation-delay: 0.1s;
+    }
+
+    .menu-items.show .icon3 {
+      animation-delay: 0.2s;
+    }
+
+    .menu-items.show .icon4 {
+      animation-delay: 0.3s;
+    }
+
+    .menu-items.show .icon5 {
+      animation-delay: 0.4s;
+    }
+
+    .menu-items.show .icon6 {
+      animation-delay: 0.5s;
+    }
+
+    .menu-items.show .icon7 {
+      animation-delay: 0.6s;
+    }
+
+    .menu-items.show .icon8 {
+      animation-delay: 0.7s;
+    }
+
+    .menu-items.fade .icon {
+      opacity: 1;
+      transform: translateY(0);
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+
+    .menu-items.fade .icon8 {
+      animation-delay: 0s;
+    }
+
+    .menu-items.fade .icon7 {
+      animation-delay: 0.1s;
+    }
+
+    .menu-items.fade .icon6 {
+      animation-delay: 0.2s;
+    }
+
+    .menu-items.fade .icon5 {
+      animation-delay: 0.3s;
+    }
+
+    .menu-items.fade .icon4 {
+      animation-delay: 0.4s;
+    }
+
+    .menu-items.fade .icon3 {
+      animation-delay: 0.5s;
+    }
+
+    .menu-items.fade .icon2 {
+      animation-delay: 0.6s;
+    }
+
+    .menu-items.fade .icon1 {
+      animation-delay: 0.7s;
+    }
+
+    /* 消息提示样式-黑 */
+    .message-tip-black {
+      position: fixed;
+      left: 50%;
+      top: 30%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.7);
+      color: rgb(0, 0, 0);
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 18px;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+      font-family: KaiTi, sans-serif;
+      z-index: 999;
+    }
+
+        /* 消息提示样式-白 */
+    .message-tip-white {
+      position: fixed;
+      left: 50%;
+      top: 30%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: rgb(255, 255, 255);
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 18px;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+      font-family: KaiTi, sans-serif;
+      z-index: 999;
+    }
+
+    @keyframes slideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="topText">
+    <h1>轻轻敲击，可体验敲木鱼的解压</h1>
+    <h4>今日功德：<span id="clickCount">0</span></h4>
+  </div>
+
+  <div>
+    <div class="settings-icon" value='0' onclick="clickEven(this)"><span class="tooltiptext">黑白模式</span></div>
+    <div class="settings-icon1" value='1' onclick="clickEven(this)"><span class="tooltiptext">数据统计</span></div>
+    <div class="settings-icon2" value='2' onclick="clickEven(this)"><span class="tooltiptext">自动模式</span></div>
+  </div>
+
+  <img class="muImage" id="muImage" src="../img/muyv.webp" alt="木鱼图片" onclick="playSound();showTooltip(event)">
+
+  <div class="menu">
+    <div class="center" onclick="toggleMenu()"><img src="../img/菜单(黑).png" width="60%" height="60%"></div>
+    <div class="menu-items" id="menuItems">
+      <div class="icon icon1" value='0' onclick="clickMenu(this)"><img src="../img/播放(黑).png" width="60%" height="60%"><span class="tooltiptext">播放音乐</span></div>
+      <div class="icon icon2" value='1' onclick="clickMenu(this)"><img src="../img/白天模式(黑).png" width="80%" height="80%"><span class="tooltiptext">黑白模式</span></div>
+      <div class="icon icon3" value='2' onclick="clickMenu(this)"><img src="../img/自动模式(黑).png" width="80%" height="80%"><span class="tooltiptext">自动模式</span></div>
+      <div class="icon icon4" value='3' onclick="clickMenu(this)"><img src="../img/统计(黑).png" width="80%" height="80%"><span class="tooltiptext">数据统计</span></div>
+      <div class="icon icon5" value='4' onclick="clickMenu(this)"><img src="../img/切换(黑).png" width="75%" height="75%"><span class="tooltiptext">切换木鱼</span></div>
+      <div class="icon icon6" value='5' onclick="clickMenu(this)"><img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+      <div class="icon icon7" value='6' onclick="clickMenu(this)"><img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+      <div class="icon icon8" value='7' onclick="clickMenu(this)"><img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+    </div>
+  </div>
+
+  <div id="sidePanel" class="hidden"></div>
+
+</div>
+
+<audio id="muyuSound" src="../video/敲击木鱼.mp3"></audio>
+<!--<script src="https://api.vvhan.com/api/script/bolang"></script>-->
+<!--<script src="https://api.vvhan.com/api/script/snow"></script>-->
+<script>
+  //黑夜模式
+  var isOpen = true;
+  var isAuto = false;
+  var interval;
+  var nowTime = new Date();
+
+  // 页面加载完成后执行
+  window.onload = function () {
+    // 获取 localStorage 中的值
+    var dataMap = localStorage.getItem('data');
+    if (null != dataMap) {
+      var data = new Map(Object.entries(JSON.parse(dataMap)));
+      var key = formatDate(nowTime);
+      var nowData = data.get(key);
+      if (null != nowData) {
+        var val = nowData.val;
+        var countElement = document.getElementById('clickCount');
+        countElement.textContent = null === val ? 0 : val; // 更新文本值
+      }
+    }
+  };
+
+  //监听全局空格事件
+  document.onkeydown = function (e) {
+    var code = window.event ? e.keyCode : e.which;
+    if (code == 32) {
+      var muImage = document.getElementById('muImage');
+      // 手动添加缩放效果
+      muImage.style.transform = 'scale(0.95)';
+      // 触发点击事件
+      muImage.click();
+      // 恢复原始大小
+      setTimeout(() => {
+        muImage.style.transform = '';
+      }, 100);
+    }
+  }
+
+  //全局监听点击事件
+  document.addEventListener('click', function (event) {
+    var targetElement = event.target;
+    if (targetElement.closest(".settings-icon1") || targetElement.closest(".icon4")) {
+      return;
+    }
+
+    if (!targetElement.closest("#sidePanel")) {
+      const sidePanel = document.getElementById("sidePanel");
+      sidePanel.classList.remove("visible");
+      sidePanel.classList.add("hidden");
+    }
+  })
+
+  //播放函数
+  function playSound() {
+    var sound = document.getElementById("muyuSound");
+    sound.currentTime = 0;
+    sound.play();
+  }
+
+  //木鱼点击事件
+  function showTooltip(event) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.innerText = '功德+1';
+    document.body.appendChild(tooltip);
+
+    if (isOpen) {
+      tooltip.style.color = '#fff';
+    } else {
+      tooltip.style.color = '#000';
+    }
+
+    var countElement = document.getElementById('clickCount');
+    // 获取当前值并加 1
+    var currentValue = parseInt(countElement.textContent, 10);
+    var clickVal = currentValue + 1;
+    countElement.textContent = clickVal; // 更新文本值
+
+    // 数据存储到localStorage
+    var data = localStorage.getItem("data");
+    if (data != null) {
+      var dataMap = new Map(Object.entries(JSON.parse(data)));
+      if (dataMap.size > 8) {
+        //移除首个元素
+        dataMap.delete(dataMap.keys().next().value);
+      }
+      var key = formatDate(nowTime);
+      var nowData = dataMap.get(key);
+      if (null != nowData) {
+        nowData.val = clickVal;
+        dataMap.set(key, nowData);
+      } else {
+        var data = {days: key, val: clickVal};
+        dataMap.set(key, data);
+      }
+      localStorage.setItem("data", JSON.stringify(Object.fromEntries(dataMap)));
+    } else {
+      var key = formatDate(nowTime);
+      var dataMap = new Map();
+      var data = {days: key, val: clickVal};
+      dataMap.set(key, data);
+      localStorage.setItem("data", JSON.stringify(Object.fromEntries(dataMap)));
+    }
+
+    setTimeout(() => {
+      tooltip.style.opacity = '0';
+      setTimeout(() => {
+        tooltip.remove();
+      }, 200);
+    }, 200);
+  }
+
+  /**
+   * 一级菜单栏击事件
+   * @param element
+   */
+  function clickEven(element) {
+    var type = element.getAttribute('value');
+    if ('0' == type) {
+      blackAndWhiteMode();
+    } else if ('1' == type) {
+      showStatMode();
+    } else {
+      autoMode();
+    }
+  }
+
+  /**
+   * 黑白模式
+   * @param
+   */
+  function blackAndWhiteMode() {
+    var container = document.getElementsByClassName('container')[0];
+    //白天模式
+    if (isOpen) {
+      container.style.backgroundColor = '#ffffff';
+      document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(黑).png')";
+      document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(黑).png')";
+      document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(黑).png')";
+      document.getElementsByTagName('img')[0].style.filter = "brightness(0%)";
+      var h1Element = document.querySelector('.topText h1');
+      h1Element.style.color = '#000'; // 改变字体颜色为红色
+
+      var h4Element = document.querySelector('.topText h4');
+      h4Element.style.color = '#000'; // 改变字体颜色为红色
+
+      //改变title文本颜色
+      var tooltiptext = document.getElementsByClassName('tooltiptext');
+      for (let i = 0; i < tooltiptext.length; i++) {
+        tooltiptext[i].style.color = '#000';
+      }
+
+
+      isOpen = false;
+    } else {
+      container.style.backgroundColor = '#000';
+      document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(白).png')";
+      document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(白).png')";
+      document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(白).png')";
+      document.getElementsByTagName('img')[0].style.filter = "brightness(100%)";
+
+      var h1Element = document.querySelector('.topText h1');
+      h1Element.style.color = '#fff'; // 改变字体颜色为红色
+
+      var h4Element = document.querySelector('.topText h4');
+      h4Element.style.color = '#fff'; // 改变字体颜色为红色
+
+      var tooltiptext = document.getElementsByClassName('tooltiptext');
+      for (let i = 0; i < tooltiptext.length; i++) {
+        tooltiptext[i].style.color = '#fff';
+      }
+
+      isOpen = true;
+    }
+  }
+
+  /**
+   * 数据统计
+   * @param
+   */
+  function showStatMode() {
+    const sidePanel = document.getElementById("sidePanel");
+    sidePanel.classList.remove("hidden");
+    sidePanel.classList.add("visible");
+    var item = localStorage.getItem("data");
+    if (item != null) {
+      var dataMap = new Map(Object.entries(JSON.parse(item)));
+      var nowData = dataMap.get(formatDate(nowTime));
+
+      if (nowData == undefined || nowData == null) {
+        nowData = {days: formatDate(nowTime), val: 0};
+      }
+
+      //求和
+      var sum = 0;
+      dataMap.values().forEach(function (item) {
+        sum = sum + item.val;
+      });
+
+      var html = `<p>` + '今日累计功德次数' + nowData.val + '次' + `</p>` + `<p>` + '近7日累计功德次数' + sum + '次' + `</p>`;
+      dataMap.values().forEach(function (item) {
+        var str = `<p>${item.days}累计功德${item.val}次</p>`
+        html += str;
+      });
+      sidePanel.innerHTML = html;
+    }
+  }
+
+  /**
+   * 自动模式
+   * @param
+   */
+  function autoMode() {
+    if (!isAuto) {
+      autoPlay();
+      interval = setInterval(autoPlay, 1400)
+      isAuto = true;
+    } else {
+      clearInterval(interval);
+      isAuto = false;
+    }
+  }
+
+  //自动播放
+  function autoPlay() {
+    showTooltip();
+    playSound();
+  }
+
+
+  /**
+   * 二级菜单点击事件
+   * @param
+   */
+  function toggleMenu() {
+    var center = document.getElementsByClassName("center")[0];
+    const menuItems = document.getElementById('menuItems');
+
+    if (menuItems.classList.contains('show')) {
+      // 收起菜单
+      menuItems.classList.add('fade');
+      menuItems.classList.remove('show');
+      center.style.background = 'rgb(255, 255, 255,0.08)';
+
+      // 延迟移除fade类，等待动画完成
+      // 增加延迟时间以确保所有图标的动画都能完成
+      setTimeout(() => {
+        menuItems.classList.remove('fade');
+      }, 1500);
+    } else {
+      // 展开菜单
+      menuItems.classList.remove('fade');
+      menuItems.classList.add('show');
+      center.style.background = 'rgb(255, 255, 255,0.9)';
+    }
+  }
+
+
+  //二级菜单点击事件
+  function clickMenu(element) {
+    var value = element.getAttribute('value');
+    if ('0' == value) {
+      //播放音乐
+    } else if ('1' == value) {
+      //黑白模式
+      blackAndWhiteMode();
+    } else if ('2' == value) {
+      //自动播放模式
+      autoMode();
+    } else if ('3' == value) {
+      //数据统计
+      showStatMode();
+    } else if ('4' == value) {
+      //切换木鱼
+    } else if ('5' == value) {
+      showMessage("敬请期待");
+    } else if ('6' == value) {
+      showMessage("敬请期待");
+    } else {
+      showMessage("敬请期待");
+    }
+  }
+
+  /**
+   * 显示消息提示
+   * @param message 消息内容
+   */
+  function showMessage(message) {
+    // 创建消息元素
+    const messageEl = document.createElement('div');
+    if(isOpen){
+      messageEl.className = 'message-tip-black';
+    }else{
+      messageEl.className = 'message-tip-white';
+    }
+    
+    messageEl.innerText = message;
+    document.body.appendChild(messageEl);
+
+    // 1秒后开始淡出
+    setTimeout(() => {
+      messageEl.style.opacity = '0';
+      // 等待过渡效果完成后移除元素
+      setTimeout(() => {
+        messageEl.remove();
+      }, 500);
+    }, 1000);
+  }
+
+  /**
+   * 格式化方法
+   * @param date
+   * @returns {string}
+   */
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+</script>
+
+</body>
+</html>

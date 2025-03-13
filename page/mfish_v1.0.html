@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电子木鱼</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      font-family: KaiTi, sans-serif;
+    }
+
+    .container {
+      background-color: #000000;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px; /* 自动模式所有四个边的圆角 */
+      transition: background-color 0.5s ease; /* 添加过渡动画 */
+    }
+
+    .topText{
+      text-align: center;
+      margin-top: 60px; /* 根据需要调整数值，向下移动 */
+      color: #fff;
+    }
+
+    .topText h1 {
+      font-size: 150%;
+    }
+
+    .topText h4{
+      font-size: 100%;
+    }
+
+    .settings-icon,
+    .settings-icon1,
+    .settings-icon2{
+      width: 30px; /* 自动模式图标宽度 */
+      height: 30px; /* 自动模式图标高度 */
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: fixed;
+      right: 30%;
+    }
+
+    .settings-icon {
+      top: 20%;
+      background-image: url('../img/白天模式(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon1 {
+      top: 30%;
+      background-image: url('../img/统计(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon2 {
+      top: 40%;
+      background-image: url('../img/自动模式(白).png');
+      background-size: 100%; /* 根据需要调整背景图像大小 */
+    }
+
+    .settings-icon:active,
+    .settings-icon1:active,
+    .settings-icon2:active {
+      transform: scale(0.9);
+    }
+
+    .settings-icon:hover .tooltiptext{
+      visibility: visible;
+    }
+    .settings-icon1:hover .tooltiptext{
+      visibility: visible;
+    }
+    .settings-icon2:hover .tooltiptext{
+      visibility: visible;
+    }
+
+    .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .muImage {
+      position: fixed;
+      right: 40%;
+      top: 40%;
+      width: 20%;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.3s ease;
+      filter: grayscale(100%) brightness(100%);
+    }
+
+    img:active {
+      transform: scale(0.95);
+    }
+
+    .tooltip {
+      position: fixed;
+      right: 47%;
+      top: 30%;
+      color: #fff;
+      font-size: 30px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      pointer-events: none;
+      opacity: 1;
+      animation: floatUp 1.8s ease forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150px);
+        opacity: 0;
+      }
+    }
+
+    /* 弹窗初始样式 */
+    #sidePanel {
+      position: fixed;
+      top: 0;
+      /*right: -100%; !* 初始隐藏在屏幕右侧 *!*/
+      width: 30%;
+      height: 100%;
+      background-color: #f4f4f4;
+      box-shadow: -3px 0 5px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      transition: right 0.5s ease; /* 动画效果 */
+      border-radius: 20px;
+      z-index: 2;
+    }
+
+    #sidePanel p{
+      margin: auto;
+      line-height: 50px;
+      width: 50%;
+    }
+    #sidePanel.hidden {
+      right: -100%; /* 隐藏状态 */
+    }
+
+    #sidePanel.visible {
+      right: 0; /* 显示状态 */
+    }
+
+    .menu {
+      position: relative;
+      left:80%;
+      top:50%;
+      width: 200px;
+      height: 200px;
+    }
+    .center {
+      position: absolute;
+      width: 25%;
+      height: 25%;
+      background-color: rgb(255, 255, 255,0.08);
+      border-radius: 50%;
+      /*box-shadow: 0 0 10px #fff6f6;*/
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #000000;
+      font-size: 24px;
+      z-index: 1;
+    }
+
+    .center:hover{
+      background-color: rgb(255, 255, 255,0.9) !important;
+    }
+
+    .icon {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .menu-items {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      /* transform: translate(calc(calc(-50% + 20px)), calc(calc(-50% + 20px))); */
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-items.show .icon {
+      /* opacity: 1; */
+      pointer-events: all;
+    }
+
+    .menu-items.fade .icon {
+      opacity: 1;
+    }
+
+    .menu-items.show .icon1 {
+      animation: fadeIn 0.1s ease-in-out forwards 0s;
+    }
+
+    .menu-items.show .icon2 {
+      animation: fadeIn 0.1s ease-in-out forwards 0.2s;
+    }
+
+    .menu-items.show .icon3 {
+      animation: fadeIn 0.1s ease-in-out forwards 0.4s;
+    }
+
+    .menu-items.show .icon4 {
+      animation: fadeIn 0.1s ease-in-out forwards 0.6s;
+    }
+
+    .menu-items.show .icon5 {
+      animation: fadeIn 0.1s ease-in-out forwards 0.8s;
+    }
+
+    .menu-items.show .icon6 {
+      animation: fadeIn 0.1s ease-in-out forwards 1s;
+    }
+
+    .menu-items.show .icon7 {
+      animation: fadeIn 0.1s ease-in-out forwards 1.2s;
+    }
+
+    .menu-items.show .icon8 {
+      animation: fadeIn 0.1s ease-in-out forwards 1.4s;
+    }
+
+
+    .menu-items.fade .icon1 {
+      animation: fadeOut 0.1s ease-in-out forwards 0s;
+    }
+
+    .menu-items.fade .icon2 {
+      animation: fadeOut 0.1s ease-in-out forwards 0.2s;
+    }
+
+    .menu-items.fade .icon3 {
+      animation: fadeOut 0.1s ease-in-out forwards 0.4s;
+    }
+
+    .menu-items.fade .icon4 {
+      animation: fadeOut 0.1s ease-in-out forwards 0.6s;
+    }
+
+    .menu-items.fade .icon5 {
+      animation: fadeOut 0.1s ease-in-out forwards 0.8s;
+    }
+
+    .menu-items.fade .icon6 {
+      animation: fadeOut 0.1s ease-in-out forwards 1s;
+    }
+
+    .menu-items.fade .icon7 {
+      animation: fadeOut 0.1s ease-in-out forwards 1.2s;
+    }
+
+    .menu-items.fade .icon8 {
+      animation: fadeOut 0.1s ease-in-out forwards 1.4s;
+    }
+
+
+    /* Positioning icons in a circle */
+    .icon1 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(0deg) translateX(80px) rotate(0deg); }
+    .icon2 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(45deg) translateX(80px) rotate(-45deg); }
+    .icon3 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(90deg) translateX(80px) rotate(-90deg); }
+    .icon4 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(135deg) translateX(80px) rotate(-135deg); }
+    .icon5 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(180deg) translateX(80px) rotate(-180deg); }
+    .icon6 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(225deg) translateX(80px) rotate(-225deg); }
+    .icon7 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(270deg) translateX(80px) rotate(-270deg); }
+    .icon8 { transform: translate(calc(-50% + 20px), calc(-50% + 20px)) rotate(315deg) translateX(80px) rotate(-315deg); }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="topText">
+    <h1>轻轻敲击，可体验敲木鱼的解压</h1>
+    <h4>今日功德：<span id="clickCount">0</span></h4>
+  </div>
+
+  <div>
+    <div class="settings-icon" value='0' onclick="clickEven(this)"><span class="tooltiptext">黑白模式</span></div>
+    <div class="settings-icon1" value='1' onclick="clickEven(this)"><span class="tooltiptext">数据统计</span></div>
+    <div class="settings-icon2" value='2' onclick="clickEven(this)"><span class="tooltiptext">自动模式</span></div>
+  </div>
+
+  <img class="muImage" src="../img/muyv.webp" alt="木鱼图片" onclick="playSound();showTooltip(event)">
+
+  <div class="menu">
+    <div class="center" onclick="toggleMenu()"><img src="../img/菜单(黑).png" width="60%" height="60%"></div>
+    <div class="menu-items" id="menuItems">
+      <div class="icon icon1" value='0' onclick="clickMenu(this)"><img src="../img/播放(黑).png" width="60%" height="60%"><span class="tooltiptext">播放音乐</span></div>
+      <div class="icon icon2" value='1' onclick="clickMenu(this)"><img src="../img/白天模式(黑).png" width="80%" height="80%"><span class="tooltiptext">黑白模式</span></div>
+      <div class="icon icon3" value='2' onclick="clickMenu(this)"><img src="../img/自动模式(黑).png" width="80%" height="80%"><span class="tooltiptext">自动模式</span></div>
+      <div class="icon icon4" value='3' onclick="clickMenu(this)"><img src="../img/统计(黑).png" width="80%" height="80%"><span class="tooltiptext">数据统计</span></div>
+      <div class="icon icon5" value='4' onclick="clickMenu(this)"><img src="../img/切换(黑).png" width="80%" height="80%"><span class="tooltiptext">切换木鱼</span></div>
+      <div class="icon icon6" value='5' onclick="clickMenu(this)"><img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+      <div class="icon icon7" value='6' onclick="clickMenu(this)">️<img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+      <div class="icon icon8" value='7' onclick="clickMenu(this)"><img src="../img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext">敬请期待</span></div>
+    </div>
+  </div>
+
+  <div id="sidePanel" class="hidden"></div>
+
+</div>
+
+<audio id="muyuSound" src="../video/敲击木鱼.mp3"></audio>
+<!--<script src="https://api.vvhan.com/api/script/bolang"></script>-->
+<!--<script src="https://api.vvhan.com/api/script/snow"></script>-->
+<script>
+  //黑夜模式
+  var isOpen = true;
+  var isAuto = false;
+  var interval;
+  var nowTime = new Date();
+
+  // 页面加载完成后执行
+  window.onload = function() {
+    // 获取 localStorage 中的值
+    var dataMap = localStorage.getItem('data');
+    if(null != dataMap){
+      var data = new Map(Object.entries(JSON.parse(dataMap)));
+      var key = formatDate(nowTime);
+      var nowData = data.get(key);
+      if(null != nowData){
+        var val = nowData.val;
+        var countElement = document.getElementById('clickCount');
+        countElement.textContent = null === val ? 0 : val; // 更新文本值
+      }
+    }
+  };
+
+  //监听全局空格事件
+  document.onkeydown=function (e){
+    var code = window.event ? e.keyCode : e.which;
+    if(code == 32){
+      showTooltip();
+      playSound();
+    }
+  }
+
+  //全局监听点击事件
+  document.addEventListener('click',function(event) {
+    var targetElement = event.target;
+    if(targetElement.closest(".settings-icon1")){
+      return;
+    }
+
+    if(!targetElement.closest("#sidePanel")){
+      const sidePanel = document.getElementById("sidePanel");
+      sidePanel.classList.remove("visible");
+      sidePanel.classList.add("hidden");
+    }
+  })
+
+
+  function playSound() {
+    var sound = document.getElementById("muyuSound");
+    sound.currentTime = 0;
+    sound.play();
+  }
+
+  function showTooltip(event) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.innerText = '功德+1';
+    document.body.appendChild(tooltip);
+
+    if(isOpen){
+      tooltip.style.color = '#fff';
+    }else{
+      tooltip.style.color = '#000';
+    }
+
+    var countElement = document.getElementById('clickCount');
+    // 获取当前值并加 1
+    var currentValue = parseInt(countElement.textContent, 10);
+    var clickVal = currentValue + 1;
+    countElement.textContent = clickVal; // 更新文本值
+
+    // 数据存储到localStorage
+    var data = localStorage.getItem("data");
+    if(data != null){
+      var dataMap = new Map(Object.entries(JSON.parse(data)));
+      if(dataMap.size > 8){
+        //移除首个元素
+        dataMap.delete(dataMap.keys().next().value);
+      }
+      var key = formatDate(nowTime);
+      var nowData = dataMap.get(key);
+      if(null != nowData){
+        nowData.val = clickVal;
+        dataMap.set(key,nowData);
+      }else{
+        var data = {days:key,val:clickVal};
+        dataMap.set(key,data);
+      }
+      localStorage.setItem("data",JSON.stringify(Object.fromEntries(dataMap)));
+    }else{
+      var key = formatDate(nowTime);
+      var dataMap = new Map();
+      var data = {days:key,val:clickVal};
+      dataMap.set(key,data);
+      localStorage.setItem("data",JSON.stringify(Object.fromEntries(dataMap)));
+    }
+
+    setTimeout(() => {
+      tooltip.style.opacity = '0';
+      setTimeout(() => {
+        tooltip.remove();
+      }, 200);
+    }, 200);
+  }
+
+  /**
+   * 功能点击事件
+   * @param element
+   */
+  function clickEven(element){
+    var type = element.getAttribute('value');
+    if('0' == type){
+      var container = document.getElementsByClassName('container')[0];
+      //白天模式
+      if(isOpen){
+        container.style.backgroundColor = '#ffffff';
+        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(黑).png')";
+        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(黑).png')";
+        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(黑).png')";
+        document.getElementsByTagName('img')[0].style.filter = "brightness(0%)";
+        var h1Element = document.querySelector('.topText h1');
+        h1Element.style.color = '#000'; // 改变字体颜色为红色
+
+        var h4Element = document.querySelector('.topText h4');
+        h4Element.style.color = '#000'; // 改变字体颜色为红色
+
+        var tooltiptext = document.getElementsByClassName('tooltiptext');
+        for (let i = 0; i < tooltiptext.length; i++) {
+          tooltiptext[i].style.color = '#000';
+        }
+
+
+        isOpen = false;
+      }else{
+        container.style.backgroundColor = '#000';
+        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(白).png')";
+        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(白).png')";
+        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(白).png')";
+        document.getElementsByTagName('img')[0].style.filter = "brightness(100%)";
+
+        var h1Element = document.querySelector('.topText h1');
+        h1Element.style.color = '#fff'; // 改变字体颜色为红色
+
+        var h4Element = document.querySelector('.topText h4');
+        h4Element.style.color = '#fff'; // 改变字体颜色为红色
+
+        var tooltiptext = document.getElementsByClassName('tooltiptext');
+        for (let i = 0; i < tooltiptext.length; i++) {
+          tooltiptext[i].style.color = '#fff';
+        }
+
+        isOpen = true;
+      }
+    }else if('1' == type){
+      const sidePanel = document.getElementById("sidePanel");
+      sidePanel.classList.remove("hidden");
+      sidePanel.classList.add("visible");
+      var item = localStorage.getItem("data");
+      if(item != null){
+        var dataMap = new Map(Object.entries(JSON.parse(item)));
+        var nowData = dataMap.get(formatDate(nowTime));
+
+        //求和
+        var sum = 0;
+        dataMap.values().forEach(function (item){
+          sum = sum + item.val;
+        });
+
+        var html = `<p>` + '今日累计功德次数'+nowData.val+'次' + `</p>` + `<p>`+'近7日累计功德次数' + sum+ '次' +`</p>`;
+        dataMap.values().forEach(function (item) {
+          var str = `<p>${item.days}累计功德${item.val}次</p>`
+          html += str;
+        });
+        sidePanel.innerHTML = html;
+      }
+
+    }else{
+      if(!isAuto){
+        autoClick();
+        interval = setInterval(autoClick, 1400)
+        isAuto = true;
+      }else{
+        clearInterval(interval);
+        isAuto = false;
+      }
+
+    }
+  }
+
+  function autoClick(){
+    showTooltip();
+    playSound();
+  }
+
+  function toggleMenu() {
+    var center = document.getElementsByClassName("center")[0];
+
+    const menuItems = document.getElementById('menuItems');
+    menuItems.classList.toggle('show');
+    if(!menuItems.classList.value.includes('show')) {
+      menuItems.classList.add('fade');
+      center.style.background = 'rgb(255, 255, 255,0.08)';
+    } else {
+      menuItems.classList.remove('fade');
+      center.style.background = 'rgb(255, 255, 255,0.9)';
+    }
+  }
+
+  function clickMenu(element){
+    var value = element.getAttribute('value');
+    if('0' == value){
+
+    }else if('1' == value){
+
+    }else if('2' == value){
+
+    }else if('3' == value){
+
+    }else if('4' == value){
+
+    }else if('5' == value){
+
+    }else if('6' == value){
+
+    }else{
+
+    }
+  }
+
+  /**
+   * 格式化方法
+   * @param date
+   * @returns {string}
+   */
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+</script>
+
+</body>
+</html>
