@@ -456,6 +456,7 @@
 
   //木鱼点击事件
   function showTooltip(event) {
+    debugger
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
     tooltip.innerText = '功德+1';
@@ -690,7 +691,7 @@
     }else{
       messageEl.className = 'message-tip-white';
     }
-    
+
     messageEl.innerText = message;
     document.body.appendChild(messageEl);
 
