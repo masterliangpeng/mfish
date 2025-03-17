@@ -134,9 +134,9 @@ function blackAndWhiteMode() {
     //白天模式
     if (isOpen) {
         container.style.backgroundColor = '#ffffff';
-        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(黑).png')";
-        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(黑).png')";
-        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(黑).png')";
+        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('/img/白天模式(黑).png')";
+        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('/img/统计(黑).png')";
+        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('/img/自动模式(黑).png')";
         document.getElementsByTagName('img')[0].style.filter = "brightness(0%)";
         var h1Element = document.querySelector('.topText h1');
         h1Element.style.color = '#000'; // 改变字体颜色为红色
@@ -154,9 +154,9 @@ function blackAndWhiteMode() {
         isOpen = false;
     } else {
         container.style.backgroundColor = '#000';
-        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('../img/白天模式(白).png')";
-        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('../img/统计(白).png')";
-        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('../img/自动模式(白).png')";
+        document.getElementsByClassName('settings-icon')[0].style.backgroundImage = "url('/img/白天模式(白).png')";
+        document.getElementsByClassName('settings-icon1')[0].style.backgroundImage = "url('/img/统计(白).png')";
+        document.getElementsByClassName('settings-icon2')[0].style.backgroundImage = "url('/img/自动模式(白).png')";
         document.getElementsByTagName('img')[0].style.filter = "brightness(100%)";
 
         var h1Element = document.querySelector('.topText h1');

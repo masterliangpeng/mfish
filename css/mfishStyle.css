@@ -42,19 +42,19 @@ body {
 
 .settings-icon {
     top: 20%;
-    background-image: url('../img/白天模式(白).png');
+    background-image: url('/img/白天模式(白).png');
     background-size: 100%; /* 根据需要调整背景图像大小 */
 }
 
 .settings-icon1 {
     top: 30%;
-    background-image: url('../img/统计(白).png');
+    background-image: url('/img/统计(白).png');
     background-size: 100%; /* 根据需要调整背景图像大小 */
 }
 
 .settings-icon2 {
     top: 40%;
-    background-image: url('../img/自动模式(白).png');
+    background-image: url('/img/自动模式(白).png');
     background-size: 100%; /* 根据需要调整背景图像大小 */
 }
 

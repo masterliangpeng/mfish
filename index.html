@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电子木鱼</title>
+  <link rel="stylesheet" type="text/css" href="css/mfishStyle.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="topText">
+      <h1>轻轻敲击，可体验敲木鱼的解压</h1>
+      <h4>今日功德：<span id="clickCount">0</span></h4>
+    </div>
+
+    <div>
+      <div class="settings-icon" value='0' onclick="clickEven(this)"><span class="tooltiptext">黑白模式</span></div>
+      <div class="settings-icon1" value='1' onclick="clickEven(this)"><span class="tooltiptext">数据统计</span></div>
+      <div class="settings-icon2" value='2' onclick="clickEven(this)"><span class="tooltiptext">自动模式</span></div>
+    </div>
+
+    <img class="muImage" id="muImage" src="/img/muyv.webp" alt="木鱼图片" onclick="playSound();showTooltip(event)">
+
+    <div class="menu">
+      <div class="center" onclick="toggleMenu()"><img src="/img/菜单(黑).png" width="60%" height="60%"></div>
+      <div class="menu-items" id="menuItems">
+        <div class="icon icon1" value='0' onclick="clickMenu(this)"><img src="img/播放(黑).png" width="60%" height="60%"><span class="tooltiptext" style="right:15px">播放音乐</span></div>
+        <div class="icon icon2" value='1' onclick="clickMenu(this)"><img src="img/白天模式(黑).png" width="80%" height="80%"><span class="tooltiptext" style="right:15px">黑白模式</span></div>
+        <div class="icon icon3" value='2' onclick="clickMenu(this)"><img src="img/自动模式(黑).png" width="80%" height="80%"><span class="tooltiptext" style="right:15px">自动模式</span></div>
+        <div class="icon icon4" value='3' onclick="clickMenu(this)"><img src="img/统计(黑).png" width="80%" height="80%"><span class="tooltiptext" style="right:15px">数据统计</span></div>
+        <div class="icon icon5" value='4' onclick="clickMenu(this)"><img src="img/切换(黑).png" width="75%" height="75%"><span class="tooltiptext" style="right:15px">切换木鱼</span></div>
+        <div class="icon icon6" value='5' onclick="clickMenu(this)"><img src="img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext" style="right:15px">敬请期待</span></div>
+        <div class="icon icon7" value='6' onclick="clickMenu(this)"><img src="img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext" style="right:15px">敬请期待</span></div>
+        <div class="icon icon8" value='7' onclick="clickMenu(this)"><img src="img/敬请期待(黑).png" width="60%" height="60%"><span class="tooltiptext" style="right:15px">敬请期待</span></div>
+      </div>
+    </div>
+
+    <div id="sidePanel" class="hidden"></div>
+
+  </div>
+
+  <audio id="muyuSound" src="/video/敲击木鱼.mp3"></audio>
+
+  <script type="text/javascript" src="js/mfishScript.js"/>
+</body>
+</html>
