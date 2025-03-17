@@ -1,5 +1,19 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/page/mfish_v2.0.html" }
+  ],
+  "headers": [
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
+      ]
+    }
   ]
 }
