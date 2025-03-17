@@ -141,91 +141,18 @@
       /*right: -100%; !* 初始隐藏在屏幕右侧 *!*/
       width: 30%;
       height: 100%;
-      background-color: rgba(244, 244, 244, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-      padding: 30px;
+      background-color: #f4f4f4;
+      box-shadow: -3px 0 5px rgba(0, 0, 0, 0.2);
+      padding: 20px;
       transition: right 0.5s ease; /* 动画效果 */
-      border-radius: 20px 0 0 20px;
+      border-radius: 20px;
       z-index: 2;
-      overflow-y: auto;
     }
 
-    #sidePanel h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-family: KaiTi, sans-serif;
-      color: #333;
-    }
-
-    .stat-card {
-      background-color: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .stat-card h3 {
-      margin: 0 0 10px 0;
-      font-size: 16px;
-      color: #333;
-      font-family: KaiTi, sans-serif;
-    }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #4a6fa5;
-      margin-bottom: 10px;
-    }
-
-    .progress-container {
-      width: 100%;
-      height: 8px;
-      background-color: #f0f0f0;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #4a6fa5, #6a8caf);
-      border-radius: 4px;
-      transition: width 0.5s ease;
-    }
-
-    /* 黑暗模式下的样式 */
-    .dark-mode .stat-card {
-      background-color: #333;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .dark-mode .stat-card h3 {
-      color: #f0f0f0;
-    }
-
-    .dark-mode .stat-value {
-      color: #6a8caf;
-    }
-
-    .dark-mode .progress-container {
-      background-color: #444;
-    }
-
-    .dark-mode #sidePanel {
-      background-color: rgba(40, 40, 40, 0.85);
-    }
-
-    .dark-mode #sidePanel h2 {
-      color: #f0f0f0;
+    #sidePanel p {
+      margin: auto;
+      line-height: 50px;
+      width: 50%;
     }
 
     #sidePanel.hidden {
@@ -652,14 +579,6 @@
     const sidePanel = document.getElementById("sidePanel");
     sidePanel.classList.remove("hidden");
     sidePanel.classList.add("visible");
-
-    // 根据当前模式添加暗黑模式类
-    if (!isOpen) {
-      sidePanel.classList.add("dark-mode");
-    } else {
-      sidePanel.classList.remove("dark-mode");
-    }
-
     var item = localStorage.getItem("data");
     if (item != null) {
       var dataMap = new Map(Object.entries(JSON.parse(item)));
@@ -669,66 +588,18 @@
         nowData = {days: formatDate(nowTime), val: 0};
       }
 
-      // 求和
+      //求和
       var sum = 0;
-      var maxVal = 0;
-      dataMap.forEach(function (item) {
+      dataMap.values().forEach(function (item) {
         sum = sum + item.val;
-        if (item.val > maxVal) maxVal = item.val;
       });
 
-      // 创建标题
-      var html = `<h2>功德统计</h2>`;
-
-      // 今日功德卡片
-      html += `
-        <div class="stat-card">
-          <h3>今日功德</h3>
-          <div class="stat-value">${nowData.val}</div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: ${maxVal > 0 ? (nowData.val / maxVal * 100) : 0}%"></div>
-          </div>
-        </div>
-      `;
-
-      // 近7日累计功德卡片
-      html += `
-        <div class="stat-card">
-          <h3>近期累计功德</h3>
-          <div class="stat-value">${sum}</div>
-        </div>
-      `;
-
-      // 每日功德记录
-      var sortedData = Array.from(dataMap.values()).sort((a, b) => {
-        return new Date(b.days) - new Date(a.days);
+      var html = `<p>` + '今日累计功德次数' + nowData.val + '次' + `</p>` + `<p>` + '近7日累计功德次数' + sum + '次' + `</p>`;
+      dataMap.values().forEach(function (item) {
+        var str = `<p>${item.days}累计功德${item.val}次</p>`
+        html += str;
       });
-
-      sortedData.forEach(function (item) {
-        html += `
-          <div class="stat-card">
-            <h3>${item.days}</h3>
-            <div class="stat-value">${item.val}</div>
-            <div class="progress-container">
-              <div class="progress-bar" style="width: ${maxVal > 0 ? (item.val / maxVal * 100) : 0}%"></div>
-            </div>
-          </div>
-        `;
-      });
-
       sidePanel.innerHTML = html;
-    } else {
-      // 没有数据时显示的内容
-      sidePanel.innerHTML = `
-        <h2>功德统计</h2>
-        <div class="stat-card">
-          <h3>今日功德</h3>
-          <div class="stat-value">0</div>
-        </div>
-        <div class="stat-card">
-          <h3>暂无历史数据</h3>
-        </div>
-      `;
     }
   }
 
