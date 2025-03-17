@@ -1,26 +1,5 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/page/mfish_v2.0.html" }
-  ],
-  "headers": [
-    {
-      "source": "/css/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/js/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/(.*).html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache" },
-        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
-      ]
-    }
   ]
 }
